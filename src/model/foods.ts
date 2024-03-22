@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 const foodSchema: Schema = new Schema({
   title: { type: String, required: true },
-  foods: { type: Array, required: true },
+  foodList: { type: [[Schema.Types.Mixed]], required: false },
 });
 
 export interface IFood extends Document {
   title: string;
-  foods: string[];
+  foodList: any[][];
 }
 
 export const Food = mongoose.model<IFood>("Food", foodSchema);
