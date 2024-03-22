@@ -48,10 +48,11 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
+
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ msg: 'Please fill all fields' });
+      return res.status(402).json({ msg: 'Please fill all fields' });
     }
 
     const admin = await Admin.findOne
@@ -66,7 +67,7 @@ export const login = async (req: Request, res: Response) => {
     const passwordValid = await argon2.verify(admin.password, password);
 
     if (!passwordValid) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
+      return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
     const accessToken = generateUserAccessToken(
