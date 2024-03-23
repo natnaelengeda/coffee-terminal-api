@@ -16,10 +16,16 @@ export const getAll = async (req: Request, res: Response) => {
 
 export const createCatagory = async (req: Request, res: Response) => {
   try {
-    const { title } = req.body;
+    const { category } = req.body;
+
+    const food = await Food.findOne({ title: category });
+
+    if (food) {
+      return res.status(400).json({ msg: 'Category already exists' });
+    }
 
     const newFood = new Food({
-      title: title
+      title: category
     });
 
     const savedFood = await newFood.save();
@@ -32,17 +38,18 @@ export const createCatagory = async (req: Request, res: Response) => {
   }
 }
 
-export const addFood = async (req: Request, res: Response) => {
+export const addFood = async (req: any, res: Response) => {
   try {
-    const { id, name, price, image } = req.body;
 
-    const food = await Food.findById(id);
+    const { category, name, price } = req.body;
+    const image = req.files[0].filename;
+    const food = await Food.findById(category);
 
     if (!food) {
       return res.status(404).json({ msg: 'Food not found' });
     }
 
-    await Food.updateOne({ _id: id },
+    await Food.updateOne({ _id: category },
       {
         $push: {
           foodList: {
