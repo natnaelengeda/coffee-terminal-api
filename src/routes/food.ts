@@ -1,5 +1,5 @@
 import express from 'express';
-import { addFood, createCatagory, getAll } from '../controller/food';
+import { addFood, createCatagory, getAll, getImage, updateFood } from '../controller/food';
 import multer from 'multer';
 
 
@@ -19,6 +19,10 @@ const router = express.Router();
 
 router.get('/getAll', getAll);
 router.post('/createCatagory', createCatagory);
+router.post('/updateFood', updateFood);
 router.post('/addFood', uploadImage.array('image'), addFood);
+
+// Image Api 
+router.get('/getImage/:name', getImage);
 
 module.exports = router;

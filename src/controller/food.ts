@@ -68,3 +68,42 @@ export const addFood = async (req: any, res: Response) => {
     res.status(500).json({ msg: 'Internal server error' });
   }
 }
+
+export const updateFood = async (req: Request, res: Response) => {
+  try {
+    const { id, name, price } = req.body;
+
+    const food = await Food.findOne({ "foodList._id": id });
+
+    if (!food) {
+      return res.status(404).json({ msg: 'Food not found' });
+    }
+
+    await Food.updateOne({ "foodList._id": id },
+      {
+        $set: {
+          "foodList.$.name": name,
+          "foodList.$.price": price
+        }
+      }
+    );
+
+    res.status(200).json({ msg: 'Food updated successfully' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
+}
+
+export const getImage = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    const location = process.env.FILE_PATH + "/uploads/images/food/";
+
+    res.sendFile(location + name);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
+}
