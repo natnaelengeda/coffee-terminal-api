@@ -1,5 +1,11 @@
 import express from 'express';
-import { getAll, login, signup } from '../controller/admin';
+
+// Conntroller
+import {
+  getAll,
+  login,
+  signup
+} from '../controller/admin';
 
 const router = express.Router();
 
