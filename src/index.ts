@@ -12,8 +12,10 @@ import { connectDB } from './database/database';
 const index = require('./routes/index');
 const admin = require('./routes/admin');
 const food = require('./routes/food');
+const branches = require("./routes/branches");
 
 dotenv.config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,6 +38,7 @@ connectDB();
 app.use('/', index);
 app.use('/admin', admin);
 app.use('/food', food);
+app.use("/branches", branches);
 
 server.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

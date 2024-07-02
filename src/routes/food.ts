@@ -1,7 +1,16 @@
 import express from 'express';
-import { addFood, createCatagory, getAll, getImage, updateFood } from '../controller/food';
 import multer from 'multer';
 
+// Conteroller
+import {
+  addFood,
+  createCatagory,
+  deleteFood,
+  getAll,
+  getImage,
+  updateFood,
+  updateFoodImage
+} from '../controller/food';
 
 // Setup Multer Storage
 const storage = multer.diskStorage({
@@ -17,10 +26,13 @@ const uploadImage = multer({ storage: storage });
 
 const router = express.Router();
 
-router.get('/getAll', getAll);
+router.get('/', getAll);
+router.put('/', updateFood);
+router.post('/', uploadImage.array('image'), addFood);
 router.post('/createCatagory', createCatagory);
-router.post('/updateFood', updateFood);
-router.post('/addFood', uploadImage.array('image'), addFood);
+
+router.post("/image", uploadImage.single("image"), updateFoodImage);
+router.delete("/:id", deleteFood);
 
 // Image Api 
 router.get('/getImage/:name', getImage);
