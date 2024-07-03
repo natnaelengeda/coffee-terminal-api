@@ -16,9 +16,9 @@ export const getAll = async (req: Request, res: Response) => {
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
       return res.status(400).json({ msg: 'Please fill all fields' });
     }
 
@@ -34,7 +34,7 @@ export const signup = async (req: Request, res: Response) => {
       name: name,
       email: email,
       password: hashedPassword,
-      role: role
+      role: "SA"
     });
 
     await admin.save();
