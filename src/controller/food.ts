@@ -6,9 +6,25 @@ import path from "path";
 
 export const getAll = async (req: Request, res: Response) => {
   try {
-    const FoodData = await Food.find();
-    res.status(200).json(FoodData);
+    const { branch } = req.query;
 
+    if (branch) {
+      const foodData = await Food.find({ "foodList.branches": branch });
+
+      // Further filter each foodList in the documents to include only items available in the specified branch
+      const filteredFoodData = foodData.map(foodDoc => {
+        const filteredFoodList = foodDoc.foodList.filter(item => item.branches.includes(branch.toString()));
+        return {
+          ...foodDoc.toObject(), // Convert document to object
+          foodList: filteredFoodList, // Replace with filtered foodList
+        };
+      });
+
+      res.status(200).json(filteredFoodData);
+    } else {
+      const FoodData = await Food.find();
+      res.status(200).json(FoodData);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: 'Internal server error' });
@@ -57,6 +73,7 @@ export const addFood = async (req: any, res: Response) => {
             name: name,
             price: price,
             image: image,
+            branches: [],
           }
         }
       }
@@ -97,17 +114,46 @@ export const updateFood = async (req: Request, res: Response) => {
 }
 
 export const updateFoodImage = async (req: Request, res: Response) => {
-  const { id } = req.body;
-  const image = req.file?.filename;
+  try {
+    const { id } = req.body;
+    const image = req.file?.filename;
 
-  await Food.updateOne(
-    { "foodList._id": id },
-    {
-      $set: { "foodList.$.image": image }
+    await Food.updateOne(
+      { "foodList._id": id },
+      {
+        $set: { "foodList.$.image": image }
+      }
+    );
+
+    res.status(200).json({ msg: 'Image updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
+}
+
+export const updateFoodBranch = async (req: Request, res: Response) => {
+  try {
+    const { id, branches } = req.body;
+
+    console.log(id);
+    const food = await Food.findOne({ "foodList._id": id });
+
+    if (!food) {
+      return res.status(404).json({ msg: 'Food not found' });
     }
-  );
 
-  res.status(200).json({ msg: 'Image updated successfully' });
+    await Food.updateOne(
+      { "foodList._id": id },
+      {
+        $set: { "foodList.$.branches": branches }
+      });
+
+    res.status(200).json({ msg: 'Branches updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
 }
 
 export const deleteFood = async (req: Request, res: Response) => {

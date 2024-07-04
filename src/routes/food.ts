@@ -9,6 +9,7 @@ import {
   getAll,
   getImage,
   updateFood,
+  updateFoodBranch,
   updateFoodImage
 } from '../controller/food';
 
@@ -28,6 +29,7 @@ const router = express.Router();
 
 router.get('/', getAll);
 router.put('/', updateFood);
+router.put('/branches', updateFoodBranch);
 router.post('/', uploadImage.array('image'), addFood);
 router.post('/createCatagory', createCatagory);
 

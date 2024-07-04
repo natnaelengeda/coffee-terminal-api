@@ -13,6 +13,8 @@ const index = require('./routes/index');
 const admin = require('./routes/admin');
 const food = require('./routes/food');
 const branches = require("./routes/branches");
+const contact = require('./routes/contact');
+const subscription = require('./routes/subscription');
 
 dotenv.config();
 
@@ -40,6 +42,8 @@ app.use('/', index);
 app.use('/admin', admin);
 app.use('/food', food);
 app.use("/branches", branches);
+app.use("/contact", contact);
+app.use('/subscription', subscription);
 
 server.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

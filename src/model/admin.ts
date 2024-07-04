@@ -1,5 +1,16 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export interface IAdmin extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  accessToken?: string;
+  refreshToken?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const adminSchema: Schema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
@@ -11,15 +22,6 @@ const adminSchema: Schema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export interface IAdmin extends Document {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  accessToken?: string;
-  refreshToken?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+
 
 export const Admin = mongoose.model<IAdmin>("Admin", adminSchema);
